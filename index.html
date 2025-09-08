@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Gestión Coile S.A. - Offline</title>
+<style>
+:root{--bg:#f4f6f8;--card:#ffffff;--accent:#b30000;--muted:#6b7280;}
+*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;background:var(--bg);color:#111}
+header{background:linear-gradient(90deg,#2b2f36, #0b1220);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px}
+header img{height:56px}
+.header-text{font-size:18px;font-weight:700}
+.app{display:grid;grid-template-columns:260px 1fr;gap:12px;padding:12px}
+nav{background:var(--card);padding:12px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+nav button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:6px;border:1px solid #e6e7eb;background:#fff;cursor:pointer;text-align:left}
+nav button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{padding:8px}
+.card{background:var(--card);padding:12px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.04);margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
+.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-6{grid-column:span 6}.col-12{grid-column:span 12}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+input,select,textarea{width:100%;padding:8px;border:1px solid #e6e7eb;border-radius:6px;background:#fff}
+textarea{min-height:70px}
+.btn{padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
+.btn.primary{background:var(--accent);color:#fff}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:8px;border-bottom:1px solid #eef2f6;text-align:left;font-size:13px}
+.small{font-size:12px;color:var(--muted)}
+.actions button{margin-right:6px}
+.footer{font-size:12px;color:var(--muted);padding:12px;text-align:center}
+@media print{nav, .no-print{display:none!important}header{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header>
+  <img src="assets/logo.jpg" alt="logo">
+  <div>
+    <div class="header-text">ACTA DE ENTREGA · COMERCIALIZADORA COILE S.A. · AGENCIA SANTA ROSA</div>
+    <div class="small">Sistema offline — abre index.html en tu navegador</div>
+  </div>
+</header>
+
+<div class="app">
+  <nav id="menu">
+    <button data-tab="acta" class="active">Nueva Acta</button>
+    <button data-tab="reportes">Reporte General</button>
+    <button data-tab="inventario">Inventario</button>
+    <button data-tab="clientes">Clientes</button>
+    <button data-tab="vendedores">Vendedores</button>
+    <button data-tab="archivos">Archivos</button>
+    <button data-tab="ajustes">Ajustes</button>
+  </nav>
+
+  <main id="main">
+    <!-- ACTA -->
+    <section id="tab-acta" class="card">
+      <h3>Nueva Acta</h3>
+      <div class="grid">
+        <div class="col-3"><label>N° Acta</label><input id="actaNumero" readonly></div>
+        <div class="col-3"><label>Fecha</label><input id="actaFecha" type="date"></div>
+        <div class="col-3"><label>Código Cliente</label><input id="clienteCodigo"></div>
+        <div class="col-3"><label>Vendedor</label><input id="vendedorNombre" readonly></div>
+
+        <div class="col-6"><label>Nombre Cliente</label><input id="clienteNombre" readonly></div>
+        <div class="col-3"><label>Cédula/RUC</label><input id="clienteCedula" readonly></div>
+        <div class="col-3"><label>Dirección</label><input id="clienteDireccion" readonly></div>
+
+        <div class="col-4"><label>Producto</label><select id="productoSelect"></select></div>
+        <div class="col-2"><label>Stock disp.</label><input id="stockDisp" readonly></div>
+        <div class="col-2"><label>Cantidad</label><input id="productoCantidad" type="number" min="1" value="1"></div>
+        <div class="col-4"><label>Descripción</label><input id="productoDescripcion"></div>
+
+        <div class="col-6"><label>Entregado por</label><input id="entregadoPor" value="Comercializadora Coile S.A."></div>
+        <div class="col-6"><label>Recibido por</label><input id="actaRecibido" readonly></div>
+
+        <div class="col-12" style="text-align:right">
+          <button class="btn" id="btnNuevo">Nuevo</button>
+          <button class="btn" id="btnImprimirActa">Imprimir</button>
+          <button class="btn primary" id="guardarActa">Guardar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTARIO -->
+    <section id="tab-inventario" class="card" style="display:none">
+      <h3>Inventario</h3>
+      <div class="grid">
+        <div class="col-3"><label>Código</label><input id="invCodigo"></div>
+        <div class="col-4"><label>Nombre</label><input id="invNombre"></div>
+        <div class="col-2"><label>Stock inicial</label><input id="invStock" type="number" min="0" value="0"></div>
+        <div class="col-3"><label>Estado</label><select id="invActivo"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
+
+        <div class="col-12" style="text-align:right"><button class="btn primary" id="addProductoBtn">Agregar/Actualizar producto</button></div>
+
+        <div class="col-12" style="margin-top:8px">
+          <table class="table" id="tablaInventario"><thead><tr><th>Código</th><th>Nombre</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead><tbody></tbody></table>
+        </div>
+
+        <div class="col-4"><label>Producto</label><select id="movProducto"></select></div>
+        <div class="col-2"><label>Tipo</label><select id="movTipo"><option value="entrada">Entrada</option><option value="salida">Salida</option></select></div>
+        <div class="col-2"><label>Cantidad</label><input id="movCantidad" type="number" min="1" value="1"></div>
+        <div class="col-4"><label>Comentario</label><input id="movComentario"></div>
+        <div class="col-12" style="text-align:right"><button class="btn" id="registrarMovBtn">Registrar movimiento</button></div>
+      </div>
+    </section>
+
+    <!-- CLIENTES -->
+    <section id="tab-clientes" class="card" style="display:none">
+      <h3>Clientes</h3>
+      <div class="grid">
+        <div class="col-3"><label>Código</label><input id="cliCodigo"></div>
+        <div class="col-5"><label>Nombre</label><input id="cliNombre"></div>
+        <div class="col-4"><label>Cédula/RUC</label><input id="cliCedula"></div>
+        <div class="col-6"><label>Dirección</label><input id="cliDireccion"></div>
+        <div class="col-6"><label>Vendedor asignado</label><select id="cliVendedor"></select></div>
+        <div class="col-12" style="text-align:right"><button class="btn primary" id="guardarCliente">Guardar Cliente</button></div>
+        <div class="col-12"><table class="table" id="tablaClientes"><thead><tr><th>Código</th><th>Nombre</th><th>Vendedor</th><th>Estado</th><th>Acciones</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- VENDEDORES -->
+    <section id="tab-vendedores" class="card" style="display:none">
+      <h3>Vendedores</h3>
+      <div class="grid">
+        <div class="col-4"><label>Código</label><input id="venCodigo"></div>
+        <div class="col-6"><label>Nombre</label><input id="venNombre"></div>
+        <div class="col-2" style="display:flex;align-items:flex-end"><button class="btn primary" id="guardarVendedor">Guardar Vendedor</button></div>
+        <div class="col-12"><table class="table" id="tablaVendedores"><thead><tr><th>Código</th><th>Nombre</th><th>Estado</th><th>Acciones</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- ARCHIVOS -->
+    <section id="tab-archivos" class="card" style="display:none">
+      <h3>Archivos</h3>
+      <input type="file" id="fileInput" multiple>
+      <div style="text-align:right;margin-top:8px"><button class="btn" id="uploadBtn">Subir</button></div>
+      <div style="margin-top:8px"><ul id="fileList"></ul></div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section id="tab-ajustes" class="card" style="display:none">
+      <h3>Ajustes</h3>
+      <label>Título</label><input id="ajTitulo" placeholder="ACTA DE ENTREGA - COILE S.A.">
+      <label>Logo (reemplazar assets/logo.jpg para cambiar)</label><input disabled value="assets/logo.jpg">
+      <div style="text-align:right;margin-top:8px"><button class="btn" id="btnBackup">Exportar respaldo (JSON)</button></div>
+    </section>
+
+    <div class="footer">Sistema offline - abre este archivo en tu navegador. Datos guardados en LocalStorage.</div>
+  </main>
+</div>
+
+<script>
+const DB = { actas:'coile_actas', inventario:'coile_productos', clientes:'coile_clients', vendedores:'coile_vendors', files:'coile_files', ajustes:'coile_settings' };
+const get = (k,d)=> JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
+const set = (k,v)=> localStorage.setItem(k, JSON.stringify(v));
+
+let actas = get(DB.actas,[]), inventario = get(DB.inventario,[]), clientes = get(DB.clientes,[]), vendedores = get(DB.vendedores,[]), files = get(DB.files,[]), ajustes = get(DB.ajustes,{});
+
+function today(){ return new Date().toISOString().slice(0,10); }
+function nextActa(){ return 'ACTA-' + String(actas.length+1).padStart(3,'0'); }
+
+// nav
+document.querySelectorAll('nav button').forEach(btn=> btn.addEventListener('click', ()=>{ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const tab=btn.dataset.tab; document.querySelectorAll('main section').forEach(s=> s.style.display='none'); if(tab==='reportes'){ renderReporte(); document.getElementById('reporteSection').style.display='block'; } else document.getElementById('tab-'+tab).style.display='block'; }));
+
+function init(){ document.getElementById('actaFecha').value = today(); document.getElementById('actaNumero').value = nextActa(); renderAll(); }
+function renderAll(){ actas=get(DB.actas,[]); inventario=get(DB.inventario,[]); clientes=get(DB.clientes,[]); vendedores=get(DB.vendedores,[]); files=get(DB.files,[]); ajustes=get(DB.ajustes,{}); renderInventario(); renderClients(); renderVendors(); renderFiles(); fillSelects(); renderReporte(); }
+
+function fillSelects(){ const prodSel=document.getElementById('productoSelect'); prodSel.innerHTML='<option value=\"\">-- Seleccione --</option>'; inventario.filter(p=>p.activo!==false).forEach(p=> prodSel.insertAdjacentHTML('beforeend', `<option value=\"${p.codigo}\">${p.codigo} · ${p.nombre}</option>`)); const mov=document.getElementById('movProducto'); mov.innerHTML=''; inventario.filter(p=>p.activo!==false).forEach(p=> mov.insertAdjacentHTML('beforeend', `<option value=\"${p.codigo}\">${p.nombre}</option>`)); const vend=document.getElementById('cliVendedor'); vend.innerHTML=''; vend.insertAdjacentHTML('beforeend','<option value=\"\">-- Ninguno --</option>'); vendedores.filter(v=>v.activo!==false).forEach(v=> vend.insertAdjacentHTML('beforeend', `<option value=\"${v.codigo}\">${v.nombre}</option>`)); }
+
+// autocomplete client
+document.getElementById('clienteCodigo').addEventListener('change', ()=>{ const code=document.getElementById('clienteCodigo').value.trim(); const c=clientes.find(x=>x.codigo===code); if(c){ document.getElementById('clienteNombre').value=c.nombre||''; document.getElementById('clienteCedula').value=c.cedula||''; document.getElementById('clienteDireccion').value=c.direccion||''; const v=vendedores.find(vv=>vv.codigo===c.vendedor); document.getElementById('vendedorNombre').value=v? v.nombre : ''; document.getElementById('actaRecibido').value=c.nombre||''; } updateStockDisp(); });
+
+document.getElementById('productoSelect').addEventListener('change', updateStockDisp);
+function updateStockDisp(){ const code=document.getElementById('productoSelect').value; const p=inventario.find(x=>x.codigo===code); document.getElementById('stockDisp').value=p? p.stock : ''; }
+
+// acta create/update
+let editing=null;
+document.getElementById('guardarActa').addEventListener('click', ()=>{
+  const a = { id: editing||crypto.randomUUID(), numero: editing? actas.find(x=>x.id===editing).numero : nextActa(), fecha: document.getElementById('actaFecha').value, clienteCodigo: document.getElementById('clienteCodigo').value.trim(), clienteNombre: document.getElementById('clienteNombre').value.trim(), cedula: document.getElementById('clienteCedula').value.trim(), direccion: document.getElementById('clienteDireccion').value.trim(), vendedor: document.getElementById('vendedorNombre').value.trim(), producto: document.getElementById('productoSelect').value, cantidad: Number(document.getElementById('productoCantidad').value), descripcion: document.getElementById('productoDescripcion').value.trim(), archivos: [] };
+  if(!a.clienteCodigo || !a.producto || !a.cantidad) return alert('Complete cliente, producto y cantidad');
+  if(editing){ const idx=actas.findIndex(x=>x.id===editing); const old=actas[idx]; if(old.producto===a.producto){ const diff=a.cantidad-old.cantidad; if(diff>0) applySalida(a.producto,diff,'Ajuste edición',a.numero); else if(diff<0) applyEntrada(a.producto,Math.abs(diff),'Ajuste edición',a.numero); } else { applyEntrada(old.producto,old.cantidad,'Reversión edición',old.numero); applySalida(a.producto,a.cantidad,'Salida edición',a.numero); } actas[idx]=Object.assign({},old,a); editing=null; document.getElementById('guardarActa').textContent='Guardar'; } else { actas.push(a); applySalida(a.producto,a.cantidad,'Entrega por acta '+a.numero,a.numero); document.getElementById('actaNumero').value = nextActa(); }
+  set(DB.actas,actas); set(DB.inventario,inventario); renderAll(); renderReporteBody(); clearActa(); alert('Acta guardada'); });
+
+function clearActa(){ editing=null; document.getElementById('actaFecha').value=today(); document.getElementById('actaNumero').value=nextActa(); ['clienteCodigo','clienteNombre','clienteCedula','clienteDireccion','vendedorNombre','productoCantidad','productoDescripcion','actaRecibido'].forEach(id=>{ if(document.getElementById(id)) document.getElementById(id).value=''; }); document.getElementById('productoSelect').value=''; updateStockDisp(); }
+
+function applySalida(code,qty,comment,origen){ const p=inventario.find(x=>x.codigo===code); if(!p) return false; p.stock = Number(p.stock) - Number(qty); p.movimientos = p.movimientos||[]; p.movimientos.push({tipo:'salida',cantidad:qty,comentario:comment||'',fecha:today(),origen}); set(DB.inventario,inventario); return true; }
+function applyEntrada(code,qty,comment,origen){ const p=inventario.find(x=>x.codigo===code); if(!p) return false; p.stock = Number(p.stock) + Number(qty); p.movimientos = p.movimientos||[]; p.movimientos.push({tipo:'entrada',cantidad:qty,comentario:comment||'',fecha:today(),origen}); set(DB.inventario,inventario); return true; }
+
+// print acta (open printable HTML with logo)
+document.getElementById('btnImprimirActa').addEventListener('click', ()=>{
+  const tmp = { numero: document.getElementById('actaNumero').value, fecha: document.getElementById('actaFecha').value, cliente: document.getElementById('clienteNombre').value, producto: (inventario.find(p=>p.codigo===document.getElementById('productoSelect').value)||{}).nombre || '', cantidad: document.getElementById('productoCantidad').value, vendedor: document.getElementById('vendedorNombre').value, descripcion: document.getElementById('productoDescripcion').value, recibido: document.getElementById('actaRecibido').value, entregado: document.getElementById('entregadoPor').value };
+  const html = `<html><head><meta charset='utf-8'><title>${tmp.numero}</title><style>body{font-family:Arial;padding:18px}header{display:flex;gap:12px}header img{height:60px}</style></head><body><header><img src='assets/logo.jpg' alt='logo'><div><h1>ACTA DE ENTREGA</h1><div>${tmp.numero}</div></div></header><hr><p><b>Fecha:</b> ${tmp.fecha}</p><p><b>Cliente:</b> ${tmp.cliente}</p><p><b>Producto:</b> ${tmp.producto} — <b>Cantidad:</b> ${tmp.cantidad}</p><p><b>Vendedor:</b> ${tmp.vendedor}</p><p><b>Descripción:</b> ${tmp.descripcion}</p><p style='margin-top:40px'>Entregado por: ${tmp.entregado} — Recibido por: ${tmp.recibido}</p><script>window.print()</script></body></html>`;
+  const w=window.open('','_blank'); w.document.write(html); w.document.close();
+});
+
+// REPORTES (create section if missing)
+function renderReporte(){
+  if(document.getElementById('reporteSection')) return;
+  const sec=document.createElement('section'); sec.className='card'; sec.id='reporteSection'; sec.style.display='none';
+  sec.innerHTML = `<h3>Reporte General</h3><div class='grid'><div class='col-3'><label>Vendedor</label><select id='fVendedor'><option value=''>Todos</option></select></div><div class='col-3'><label>Producto</label><select id='fProducto'><option value=''>Todos</option></select></div><div class='col-3'><label>Desde</label><input id='fDesde' type='date'></div><div class='col-3'><label>Hasta</label><input id='fHasta' type='date'></div><div class='col-12' style='text-align:right'><button class='btn' id='btnAplicarFiltros'>Aplicar</button> <button class='btn' id='btnImprimirReporte'>Imprimir reporte</button></div><div class='col-12' style='margin-top:8px'><table class='table'><thead><tr><th>N°</th><th>Fecha</th><th>Cliente</th><th>Producto</th><th>Cant</th><th>Vendedor</th><th>Acciones</th></tr></thead><tbody id='tablaReporteBody'></tbody></table></div></div>`;
+  document.querySelector('main').appendChild(sec);
+  document.getElementById('btnAplicarFiltros').addEventListener('click', ()=> renderReporteBody());
+  document.getElementById('btnImprimirReporte').addEventListener('click', ()=> printReporteAplicado());
+  renderReporteBody();
+}
+
+function renderReporteBody(){ const fv=document.getElementById('fVendedor'); const fp=document.getElementById('fProducto'); fv.innerHTML='<option value=\"\">Todos</option>'; vendedores.forEach(v=> fv.insertAdjacentHTML('beforeend', `<option value=\"${v.codigo}\">${v.nombre}</option>`)); fp.innerHTML='<option value=\"\">Todos</option>'; inventario.filter(p=>p.activo!==false).forEach(p=> fp.insertAdjacentHTML('beforeend', `<option value=\"${p.codigo}\">${p.nombre}</option>`)); const fd=document.getElementById('fDesde').value; const fh=document.getElementById('fHasta').value; const selV=fv.value; const selP=fp.value; const tb=document.getElementById('tablaReporteBody'); tb.innerHTML=''; actas.forEach(a=>{ if(selV && a.vendedor && !vendersName(selV).includes(a.vendedor)) return; if(selP && a.producto !== selP) return; if(fd && a.fecha < fd) return; if(fh && a.fecha > fh) return; const prod=inventario.find(p=>p.codigo===a.producto); const prodName=prod? prod.nombre : a.producto; const tr=document.createElement('tr'); tr.innerHTML = `<td>${a.numero}</td><td>${a.fecha}</td><td>${a.clienteNombre}</td><td>${prodName}</td><td>${a.cantidad}</td><td>${a.vendedor}</td><td class='actions'><button onclick="editarActa('${a.id}')">Editar</button><button onclick="eliminarActa('${a.id}')">Eliminar</button><button onclick="printActa('${a.id}')">Imprimir</button><button onclick="attachFilesToActa('${a.id}')">Adjuntos</button></td>`; tb.appendChild(tr); }); }
+
+function vendersName(code){ return (vendedores.find(v=>v.codigo===code)?.nombre||''); }
+function printReporteAplicado(){ const rows = Array.from(document.querySelectorAll('#tablaReporteBody tr')).map(r=>`<tr>${Array.from(r.children).slice(0,6).map(td=>`<td>${td.innerText}</td>`).join('')}</tr>`).join(''); const html = `<html><head><meta charset='utf-8'><title>Reporte</title><style>body{font-family:Arial;padding:18px}header{display:flex;gap:12px}header img{height:60px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:6px}</style></head><body><header><img src='assets/logo.jpg'><div><h1>REPORTE GENERAL</h1></div></header><hr><table><thead><tr><th>N°</th><th>Fecha</th><th>Cliente</th><th>Producto</th><th>Cantidad</th><th>Vendedor</th></tr></thead><tbody>${rows}</tbody></table><script>window.print()</script></body></html>`; const w=window.open('','_blank'); w.document.write(html); w.document.close(); }
+
+// acta helpers (edit/delete/print/attach) function definitions are above
+
+function editarActa(id){ const a=actas.find(x=>x.id===id); if(!a) return alert('Acta no encontrada'); editing=id; document.getElementById('actaNumero').value=a.numero; document.getElementById('actaFecha').value=a.fecha; document.getElementById('clienteCodigo').value=a.clienteCodigo; document.getElementById('clienteCodigo').dispatchEvent(new Event('change')); document.getElementById('productoSelect').value=a.producto; document.getElementById('productoCantidad').value=a.cantidad; document.getElementById('productoDescription')&&(document.getElementById('productoDescription').value=a.descripcion); document.getElementById('guardarActa').textContent='Actualizar'; }
+function eliminarActa(id){ if(!confirm('Eliminar acta?')) return; const idx=actas.findIndex(a=>a.id===id); if(idx===-1) return; const a=actas[idx]; applyEntrada(a.producto,a.cantidad,'Restauración por eliminación '+a.numero,a.numero); actas.splice(idx,1); actas.forEach((x,i)=> x.numero='ACTA-'+String(i+1).padStart(3,'0')); set(DB.actas,actas); set(DB.inventario,inventario); renderAll(); renderReporteBody(); }
+function printActa(id){ const a=actas.find(x=>x.id===id); if(!a) return; const prod=inventario.find(p=>p.codigo===a.producto); const prodName=prod? prod.nombre : a.producto; const html=`<html><head><meta charset='utf-8'><title>${a.numero}</title><style>body{font-family:Arial;padding:18px}header{display:flex;gap:12px}header img{height:60px}</style></head><body><header><img src='assets/logo.jpg'><div><h1>ACTA DE ENTREGA</h1><div>${a.numero}</div></div></header><hr><p><b>Fecha:</b> ${a.fecha}</p><p><b>Cliente:</b> ${a.clienteNombre}</p><p><b>Producto:</b> ${prodName}</p><p><b>Cantidad:</b> ${a.cantidad}</p><p><b>Vendedor:</b> ${a.vendedor}</p><p><b>Descripción:</b> ${a.descripcion}</p><script>window.print()</script></body></html>`; const w=window.open('','_blank'); w.document.write(html); w.document.close(); }
+function attachFilesToActa(id){ const input=document.createElement('input'); input.type='file'; input.multiple=true; input.onchange=()=>{ const filesSel=Array.from(input.files); const a=actas.find(x=>x.id===id); if(!a) return alert('Acta no encontrada'); a.archivos=a.archivos||[]; const readers=filesSel.map(f=> new Promise(res=>{ const r=new FileReader(); r.onload=()=>res({name:f.name,data:r.result}); r.readAsDataURL(f); })); Promise.all(readers).then(results=>{ a.archivos.push(...results); set(DB.actas,actas); alert('Archivos adjuntados a la acta'); }); }; input.click(); }
+
+// inventory render and actions
+function renderInventario(){ const tbody=document.querySelector('#tablaInventario tbody'); tbody.innerHTML=''; inventario.forEach(p=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${p.codigo}</td><td>${p.nombre}</td><td>${p.stock}</td><td>${p.activo? 'Activo':'Inactivo'}</td><td><button onclick="editProducto('${p.codigo}')">Editar</button> <button onclick="toggleProducto('${p.codigo}')">${p.activo? 'Inactivar':'Activar'}</button> <button onclick="verMovimientos('${p.codigo}')">Movs</button></td>`; tbody.appendChild(tr); }); }
+function editProducto(code){ const p=inventario.find(x=>x.codigo===code); if(!p) return; document.getElementById('invCodigo').value=p.codigo; document.getElementById('invNombre').value=p.nombre; document.getElementById('invStock').value=p.stock; document.getElementById('invActivo').value=p.activo? 'activo':'inactivo'; }
+function toggleProducto(code){ const p=inventario.find(x=>x.codigo===code); if(!p) return; p.activo=!p.activo; set(DB.inventario,inventario); renderInventario(); fillSelects(); }
+
+function verMovimientos(code){ const p=inventario.find(x=>x.codigo===code); if(!p) return alert('No encontrado'); const rows=(p.movimientos||[]).map(m=>`<tr><td>${m.fecha}</td><td>${m.tipo}</td><td>${m.cantidad}</td><td>${m.comentario||''}</td></tr>`).join(''); const w=window.open('','_blank'); w.document.write(`<h1>Movimientos ${p.nombre}</h1><table border='1'><thead><tr><th>Fecha</th><th>Tipo</th><th>Cantidad</th><th>Comentario</th></tr></thead><tbody>${rows}</tbody></table>`); w.document.close(); }
+
+document.getElementById('addProductoBtn').addEventListener('click', ()=>{ const codigo=document.getElementById('invCodigo').value.trim()||('PRD-'+Date.now()); const nombre=document.getElementById('invNombre').value.trim(); const stock=Number(document.getElementById('invStock').value)||0; const activo=document.getElementById('invActivo').value==='activo'; if(!nombre) return alert('Nombre requerido'); const idx=inventario.findIndex(x=>x.codigo===codigo); if(idx>=0){ Object.assign(inventario[idx],{codigo,nombre,stock,activo}); } else { inventario.push({codigo,nombre,stock,activo,movimientos:[{tipo:'entrada',cantidad:stock,comentario:'Stock inicial',fecha:today()}]}); } set(DB.inventario,inventario); renderInventario(); fillSelects(); alert('Producto guardado'); });
+
+document.getElementById('registrarMovBtn').addEventListener('click', ()=>{ const codigo=document.getElementById('movProducto').value; const tipo=document.getElementById('movTipo').value; const cantidad=Number(document.getElementById('movCantidad').value); const comentario=document.getElementById('movComentario').value; if(!codigo||!cantidad) return alert('Complete los datos'); if(tipo==='entrada') applyEntrada(codigo,cantidad,comentario,'manual'); else applySalida(codigo,cantidad,comentario,'manual'); set(DB.inventario,inventario); renderInventario(); fillSelects(); alert('Movimiento registrado'); });
+
+// clients
+function renderClients(){ const tbody=document.querySelector('#tablaClientes tbody'); tbody.innerHTML=''; clientes.forEach(c=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${c.codigo}</td><td>${c.nombre}</td><td>${vendedores.find(v=>v.codigo===c.vendedor)?.nombre||'-'}</td><td>${c.activo? 'Activo':'Inactivo'}</td><td><button onclick="editCliente('${c.codigo}')">Editar</button> <button onclick="toggleCliente('${c.codigo}')">${c.activo? 'Inactivar':'Activar'}</button> <button onclick="verHistorialCliente('${c.codigo}')">Historial</button> <button onclick="adjuntarCliente('${c.codigo}')">Adjuntos</button></td>`; tbody.appendChild(tr); }); }
+function editCliente(code){ const c=clientes.find(x=>x.codigo===code); if(!c) return; document.getElementById('cliCodigo').value=c.codigo; document.getElementById('cliNombre').value=c.nombre; document.getElementById('cliCedula').value=c.cedula; document.getElementById('cliDireccion').value=c.direccion; document.getElementById('cliVendedor').value=c.vendedor||''; }
+function toggleCliente(code){ const c=clientes.find(x=>x.codigo===code); if(!c) return; c.activo=!c.activo; set(DB.clientes,clientes); renderClients(); fillSelects(); }
+
+document.getElementById('guardarCliente').addEventListener('click', ()=>{ const codigo=document.getElementById('cliCodigo').value.trim()||('CL-'+Date.now()); const nombre=document.getElementById('cliNombre').value.trim(); if(!nombre) return alert('Nombre requerido'); const existing=clientes.find(x=>x.codigo===codigo); const data={codigo,nombre,cedula:document.getElementById('cliCedula').value.trim(),direccion:document.getElementById('cliDireccion').value.trim(),vendedor:document.getElementById('cliVendedor').value,activo: existing? existing.activo!==false:true, files: existing? existing.files||[]:[]}; if(existing) Object.assign(existing,data); else clientes.push(data); set(DB.clientes,clientes); renderClients(); fillSelects(); alert('Cliente guardado'); });
+
+function verHistorialCliente(code){ const rows=actas.filter(a=>a.clienteCodigo===code).map(a=>`<tr><td>${a.numero}</td><td>${a.fecha}</td><td>${(inventario.find(p=>p.codigo===a.producto)||{}).nombre||a.producto}</td><td>${a.cantidad}</td><td>${a.vendedor}</td></tr>`).join(''); const w=window.open('','_blank'); w.document.write(`<h1>Historial cliente ${code}</h1><table border='1'><thead><tr><th>N°</th><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Vendedor</th></tr></thead><tbody>${rows}</tbody></table>`); w.document.close(); }
+
+function adjuntarCliente(code){ const input=document.createElement('input'); input.type='file'; input.multiple=true; input.onchange=()=>{ const filesSel=Array.from(input.files); const client=clientes.find(x=>x.codigo===code); if(!client) return alert('Cliente no encontrado'); client.files=client.files||[]; const readers=filesSel.map(f=> new Promise(res=>{ const r=new FileReader(); r.onload=()=>res({name:f.name,data:r.result}); r.readAsDataURL(f); })); Promise.all(readers).then(results=>{ client.files.push(...results); set(DB.clientes,clients); alert('Archivos adjuntados al cliente'); }); }; input.click(); }
+
+// vendors
+function renderVendors(){ const tbody=document.querySelector('#tablaVendedores tbody'); tbody.innerHTML=''; vendedores.forEach(v=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${v.codigo}</td><td>${v.nombre}</td><td>${v.activo? 'Activo':'Inactivo'}</td><td><button onclick="editVendedor('${v.codigo}')">Editar</button> <button onclick="toggleVendedor('${v.codigo}')">${v.activo? 'Inactivar':'Activar'}</button></td>`; tbody.appendChild(tr); }); }
+function editVendedor(code){ const v=vendedores.find(x=>x.codigo===code); if(!v) return; document.getElementById('venCodigo').value=v.codigo; document.getElementById('venNombre').value=v.nombre; }
+function toggleVendedor(code){ const v=vendedores.find(x=>x.codigo===code); if(!v) return; v.activo=!v.activo; set(DB.vendedores,vendedores); renderVendors(); fillSelects(); }
+
+document.getElementById('guardarVendedor').addEventListener('click', ()=>{ const codigo=document.getElementById('venCodigo').value.trim()||('V-'+Date.now()); const nombre=document.getElementById('venNombre').value.trim(); if(!nombre) return alert('Nombre requerido'); const existing=vendedores.find(x=>x.codigo===codigo); const data={codigo,nombre,activo: existing? existing.activo!==false:true, files: existing? existing.files||[]:[]}; if(existing) Object.assign(existing,data); else vendedores.push(data); set(DB.vendedores,vendedores); renderVendors(); fillSelects(); alert('Vendedor guardado'); });
+
+// files
+function renderFiles(){ const ul=document.getElementById('fileList'); ul.innerHTML=''; files.forEach(f=>{ const li=document.createElement('li'); const a=document.createElement('a'); a.href=f.data; a.download=f.name; a.textContent=f.name; li.appendChild(a); ul.appendChild(li); }); }
+document.getElementById('uploadBtn').addEventListener('click', ()=>{ const input=document.getElementById('fileInput'); if(!input.files.length) return alert('Seleccione archivos'); const readers=Array.from(input.files).map(f=> new Promise(res=>{ const r=new FileReader(); r.onload=()=>res({name:f.name,data:r.result}); r.readAsDataURL(f); })); Promise.all(readers).then(results=>{ files.push(...results); set(DB.files,files); renderFiles(); alert('Archivos subidos'); }); });
+
+// backup
+document.getElementById('btnBackup').addEventListener('click', ()=>{ const payload={actas,inventario,clientes,vendedores,files}; const blob= new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='coile_backup.json'; a.click(); });
+
+// initial render
+fillSelects(); renderInventario(); renderClients(); renderVendors(); renderFiles();
+
+</script>
+</body>
+</html>
